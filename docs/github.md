@@ -16,4 +16,4 @@
 
 ## CI
 
-Team org had Actions disabled, so CI runs on a school VM as a systemd timer that polls PRs and posts a `team/local-ci` status. If yours does too, keep its controller separate from PR code and never copy PR code over it.
+Team org had Actions disabled, so CI runs on a school VM as a systemd timer that polls PRs and posts a `team/local-ci` status. How ours works: [CI on a school VM](ci.md).
