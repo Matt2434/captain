@@ -19,7 +19,7 @@
 #   VM_UNREACHABLE: <host>               VM not reachable (VPN off?); VM tests will be "not verified"
 set -u
 GH_USER="__GH_USER__"; GH_REPO="__GH_REPO__"; VM_HOST="__VM_HOST__"
-ENVF="$HOME/.config/capstone.env"; PWPROFILE="$HOME/.local/share/capstone/pw-profile"
+ENVF="$HOME/.config/capstone.env"; PW_DIR="__PROJECT_DIR__/scripts/pw"; PWPROFILE="$HOME/.local/share/capstone/pw-profile"
 
 purpose() {
   case "$1" in
@@ -29,21 +29,24 @@ purpose() {
     git) echo "worktrees, one per task" ;;
     python3) echo "Captain layout/status/watcher scripts" ;;
     node) echo "Teams and SharePoint scripts" ;;
-    playwright) echo "headless Chrome for Teams/SharePoint" ;;
+    playwright) echo "drives Chrome for Teams messages and SharePoint upload/download (npm package in scripts/pw)" ;;
+    chrome) echo "the browser the Teams/SharePoint scripts run (channel: chrome) and md2pdf prints with" ;;
+    markdown) echo "Python package md2pdf.sh uses to render documents" ;;
     jq) echo "reading JSON from gh and cmux in scripts" ;;
     codex) echo "Astra second-opinion reviews and the Duo helper" ;;
     glow) echo "showing markdown in a side pane" ;;
-    pandoc) echo "markdown to PDF/DOCX for documents" ;;
     vpn) echo "Cisco Secure Client CLI for the school VPN" ;;
   esac
 }
 install_cmd() {
   case "$1" in
-    gh|git|python3|node|jq|glow|pandoc) echo "brew install ${1/python3/python}" ;;
+    gh|git|python3|node|jq|glow) echo "brew install ${1/python3/python}" ;;
     cmux) echo "brew install --cask cmux" ;;
     claude) echo "npm install -g @anthropic-ai/claude-code" ;;
     codex) echo "npm install -g @openai/codex" ;;
-    playwright) echo "npm install -g playwright && npx playwright install chromium" ;;
+    playwright) echo "cd '$PW_DIR' && npm install && npx playwright install chromium" ;;
+    chrome) echo "brew install --cask google-chrome" ;;
+    markdown) echo "python3 -m pip install --user markdown" ;;
     *) return 1 ;;
   esac
 }
@@ -68,8 +71,12 @@ fi
 
 # 1. Tools
 for t in claude cmux gh git python3 node; do has "$t" || missing "$t"; done
-has node && { node -e "require.resolve('playwright')" >/dev/null 2>&1 || npm ls -g playwright >/dev/null 2>&1 || missing playwright; }
-for t in jq codex glow pandoc; do has "$t" || missing "$t" OPTIONAL_MISSING; done
+# Teams + SharePoint: Node, the playwright package next to the scripts, and real Google Chrome
+has node && { (cd "$PW_DIR" 2>/dev/null && node -e "import('playwright').then(()=>{},()=>process.exit(1))") >/dev/null 2>&1 || missing playwright; }
+[ -d "/Applications/Google Chrome.app" ] || [ -d "$HOME/Applications/Google Chrome.app" ] || missing chrome
+# Documents: md2pdf.sh needs the Python markdown package (and Chrome above)
+has python3 && { python3 -c "import markdown" >/dev/null 2>&1 || missing markdown; }
+for t in jq codex glow; do has "$t" || missing "$t" OPTIONAL_MISSING; done
 [ -n "$VM_HOST" ] && [[ "$VM_HOST" != *__* ]] && [ ! -x /opt/cisco/secureclient/bin/vpn ] && echo "MISSING_MANUAL: vpn (purpose: $(purpose vpn); instructions: $(manual_url vpn))"
 
 # 2. Config filled in

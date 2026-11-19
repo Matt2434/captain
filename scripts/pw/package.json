@@ -1,0 +1,7 @@
+{
+  "name": "captain-pw-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Teams and SharePoint scripts for Captain (headless Chrome with a saved Microsoft login)",
+  "dependencies": { "playwright": "1.49.1" }
+}

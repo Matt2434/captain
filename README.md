@@ -48,19 +48,20 @@ Docs:
 | **GitHub CLI** (`gh`) | `brew install gh` | PRs, reviews, reviewer requests, CI status | Yes |
 | **git** | `xcode-select --install` | Worktrees, one per task | Yes |
 | **Python 3.11+** | `brew install python` | `setup.py`, `status.py`, watchers | Yes |
-| **Node 20+** | `brew install node` | Playwright scripts for Teams/SharePoint | Yes, for Teams/SharePoint |
-| **Playwright** | `npm i -g playwright && npx playwright install chromium` | Headless Chrome with a saved Microsoft login | Yes, for Teams/SharePoint |
+| **Node 20+** (with npm) | `brew install node` | Runs the Teams/SharePoint scripts | Yes, for Teams/SharePoint |
+| **Playwright** (npm package) | `cd <project>/scripts/pw && npm install && npx playwright install chromium` (`install.sh` does this) | Drives the browser for Teams messages and SharePoint upload/download/list. Installed **next to the scripts**, not with `-g`, because the scripts `import 'playwright'` and Node won't find a global copy | Yes, for Teams/SharePoint |
+| **Google Chrome** | `brew install --cask google-chrome` | The scripts launch real Chrome (`channel: 'chrome'`) with the saved Microsoft login; `md2pdf.sh` prints PDFs with it | Yes, for Teams/SharePoint/PDFs |
 | **Codex CLI** (`codex`) | `npm i -g @openai/codex` | Astra second-opinion reviews, the Duo-approval helper | Optional |
 | **glow** | `brew install glow` | Showing markdown in a side pane | Optional |
-| **pandoc** + a LaTeX/WeasyPrint engine | `brew install pandoc` | `md2pdf.sh`, `md2docx` | For PDF/DOCX output |
 | **Cisco Secure Client** | From your school's IT portal | VPN to the school VM | If your CI/VM is behind VPN |
 | **Duo Mobile** | App Store / Play Store | VPN two-factor push | If your school uses Duo |
 | `caffeinate` | Built into macOS | Keeps the Mac awake while sessions run | Built in |
 
 ### Python / Node packages
 
-- Python: standard library only for the Captain scripts. `python-docx` for `docx2md.py` (`pip install python-docx`).
-- Node: `playwright`.
+- Python: standard library only for the Captain scripts and `docx2md.py`. `md2pdf.sh` needs `markdown` (`python3 -m pip install --user markdown`).
+- Node: `playwright`, pinned in `scripts/pw/package.json`.
+- No Microsoft CLI or API key is needed for Teams or SharePoint. The scripts use your normal school login, saved once with `node scripts/pw/ms-login.mjs` (Duo on your phone) in `~/.local/share/capstone/pw-profile`. It expires every few weeks; run it again when a script says you're logged out.
 
 ### Accounts and access
 
