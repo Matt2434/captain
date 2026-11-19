@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b1f3a"/>
+      <stop offset="1" stop-color="#14365f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="360" rx="18" fill="url(#sea)"/>
+  <path d="M0 300 Q150 280 300 300 T600 300 T900 300 T1200 300 V360 H0Z" fill="#1d4a7d" opacity=".7"/>
+  <path d="M0 322 Q150 305 300 322 T600 322 T900 322 T1200 322 V360 H0Z" fill="#26609e" opacity=".6"/>
+
+  <!-- Captain node -->
+  <g transform="translate(130 120)">
+    <rect width="230" height="110" rx="14" fill="#f4c542"/>
+    <text x="115" y="50" text-anchor="middle" font-size="34" font-weight="700" fill="#0b1f3a">🤠 Captain</text>
+    <text x="115" y="82" text-anchor="middle" font-size="16" fill="#0b1f3a">pinned · coordinates</text>
+  </g>
+
+  <!-- links -->
+  <g stroke="#9cc3ee" stroke-width="3" fill="none" stroke-dasharray="6 6">
+    <path d="M360 175 C430 175 440 90 520 90"/>
+    <path d="M360 175 L520 175"/>
+    <path d="M360 175 C430 175 440 260 520 260"/>
+  </g>
+
+  <!-- crew -->
+  <g font-size="18" fill="#0b1f3a">
+    <rect x="520" y="62" width="260" height="56" rx="10" fill="#e8f1fb"/>
+    <text x="540" y="97">🔍 Review workspace</text>
+    <rect x="520" y="147" width="260" height="56" rx="10" fill="#e8f1fb"/>
+    <text x="540" y="182">🛠️ Code workspace</text>
+    <rect x="520" y="232" width="260" height="56" rx="10" fill="#e8f1fb"/>
+    <text x="540" y="267">✍️ Doc / deck workspace</text>
+  </g>
+
+  <!-- title -->
+  <text x="1080" y="150" text-anchor="end" font-size="64" font-weight="800" fill="#ffffff">captain</text>
+  <text x="1080" y="192" text-anchor="end" font-size="22" fill="#cfe0f5">Talk to one agent. Run the whole capstone.</text>
+  <text x="1080" y="228" text-anchor="end" font-size="16" fill="#9cc3ee">cmux · Claude Code · GitHub · YouTrack · Teams · SharePoint</text>
+  <text x="1080" y="270" text-anchor="end" font-size="18" fill="#f4c542">☕ caffeinate keeps the ship awake</text>
+</svg>

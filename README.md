@@ -1,12 +1,72 @@
-# Captain
+<h1 align="center">captain</h1>
+<p align="center">
+  <img alt="Platform" src="https://img.shields.io/badge/platform-macOS-blue?style=flat-square" />
+  <img alt="Agent" src="https://img.shields.io/badge/agent-Claude%20Code-d97757?style=flat-square" />
+  <img alt="Terminal" src="https://img.shields.io/badge/terminal-cmux-black?style=flat-square" />
+  <img alt="Tracker" src="https://img.shields.io/badge/tracker-YouTrack-8a2be2?style=flat-square" />
+</p>
 
-A setup kit for running a team capstone project with one coordinating AI agent, the **Captain**, and one terminal workspace for each task. It contains the instructions, conventions and scripts used by Team Aurora (GMU DAEN-690, Fall 2026) to run reviews, keep YouTrack and GitHub in sync, post to Teams, and make documents and decks.
+<h3 align="center">Talk to one agent. Run the whole capstone.</h3>
 
-> The idea of a coordinating "captain" agent that hands work to crew sessions comes from the *First Mate* protocol. This repo is our own take on it, built for a school capstone.
+<p align="center">
+  <img alt="captain - one coordinating agent, one workspace per task" src="assets/banner.svg" width="100%" />
+</p>
 
-Fork it, fill in `config/captain.env`, run `./install.sh`, and type `/captain` in Claude Code.
+## What it is
 
----
+A capstone team juggles a lot at once: YouTrack cards, PRs waiting for review, CI on a school VM behind a VPN, Teams messages, SharePoint documents, weekly decks. Run one coding agent per task and you end up switching between tabs and copying context from one to the next.
+
+Captain flips that. You talk to one agent, the **Captain**, pinned at the top of your cmux sidebar. It opens one workspace per card or review (a Claude session on the left, a VM shell on the right), sends each one its prompt, watches them finish, and keeps YouTrack, GitHub and Teams in sync. It reports back in a fixed format so you can read any workspace the same way.
+
+Captain is not an app. It's a Claude Code skill, a set of scripts, and the conventions Team Aurora (GMU DAEN-690, Fall 2026) used day to day: naming, review rules, comment formats and posting order. Fork it, fill in one config file, and type `/captain`.
+
+> Inspired by [kunchenguid/firstmate](https://github.com/kunchenguid/firstmate), the "talk to one agent, ship with a crew" protocol. Captain adapts the idea, and its first-run tool check, for a school capstone.
+
+## How it works
+
+```mermaid
+flowchart LR
+    You(["🧑 You"]) <--> CAP["🤠 Captain<br/>pinned · top of sidebar"]
+
+    subgraph cmux["cmux workspaces"]
+        direction TB
+        CAP
+        W1["🔍 Review 01A-215<br/>Claude ▸ │ VM shell"]
+        W2["🛠️ Code 01A-263<br/>Claude ▸ │ VM shell"]
+        W3["✍️ Deck / doc<br/>Claude ▸ │ viewer"]
+        CAF["☕ caffeinate<br/>bottom of sidebar"]
+    end
+
+    CAP -- "prompt (cmux send)" --> W1 & W2 & W3
+    W1 & W2 & W3 -- "end-of-task report" --> CAP
+
+    subgraph svc["Team services"]
+        GH[("GitHub<br/>PRs · reviews")]
+        YT[("YouTrack<br/>cards · exit criteria")]
+        TM[("Teams<br/>group + 1:1")]
+        SP[("SharePoint<br/>docs · decks")]
+    end
+
+    VM[["School VM<br/>CI + tests"]]
+    VPN{{"VPN + Duo 📱"}}
+
+    W1 & W2 --> GH & YT
+    W1 --> TM
+    W3 --> SP
+    W1 & W2 -. ssh .-> VPN -.-> VM
+    WATCH(["watch_prs.py<br/>ws_sync.py"]) -- "review requested → new workspace" --> CAP
+    GH -.-> WATCH
+```
+
+## Features
+
+- **One liaison.** You talk only to Captain. It opens workspaces, sends prompts, reads their screens and reports: what needs work now, what's waiting and on whom, your YouTrack cards, your PRs and review requests.
+- **A visible crew.** Every task runs in its own cmux workspace you can watch or type into. Captain is pinned at the top, ☕ caffeinate at the bottom.
+- **Automatic reviews.** When your GitHub account is requested as reviewer, a review workspace opens. It checks every exit criterion against evidence, runs tests locally and on the VM, posts a formal GitHub review, ticks the card and comments on YouTrack, then sends the Teams line.
+- **First-run setup check.** `/captain` checks for missing tools, GitHub and YouTrack access, the Microsoft login and the VPN. It explains what each is for and installs only what you approve.
+- **House rules included.** Naming, branch and PR format, link-first YouTrack comments, Teams message formats, deck and document flow, SharePoint uploads.
+- **Restart-proof.** State lives in `CAPTAIN.md` and per-task `STATE.md` hand-offs, so `/clear` + `/captain` (or `task_open.sh`) picks up where you left off.
+- **Hands-off VPN.** `vm_ensure.sh` connects the Cisco VPN and can approve the Duo push through iPhone Mirroring, with a manual path for Android.
 
 ## Contents
 
@@ -72,7 +132,7 @@ Docs:
 
 ---
 
-## Quick start
+## Quick Start
 
 ```bash
 gh repo clone <you>/captain && cd captain
