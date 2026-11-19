@@ -1,0 +1,8 @@
+config/captain.env
+.env
+*.env
+!config/captain.env.example
+__pycache__/
+*.bak*
+.astra-live.log
+.DS_Store

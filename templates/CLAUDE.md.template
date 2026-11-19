@@ -1,0 +1,46 @@
+# <Course> Capstone — project rules for Claude Code
+
+<!-- CUSTOMIZE everything in <angle brackets>. Keep the rules you agree with, delete the rest. -->
+
+## Who and where
+- Course: <course code / instructor>. Team: <team name>. Me: <name>, <school email>.
+- Tracker: YouTrack <url>, project <key>. Token in `.env` (chmod 600).
+- Repo: <org/repo>. GitHub account for this folder: **<school login>** only.
+- Default upload folder: `/sites/<site>/Shared Documents/DRAFTS/<YOUR FOLDER>/`.
+
+## GitHub
+- `gh auth status`; switch to <school login> before any push.
+- Branch `<card>-<kebab-description>` from `origin/main` in its own worktree. PR title `<card>: <deliverable>`.
+- PR body: card link, Summary, Files, `## Exit criteria` (from the live card), `## Verification`.
+- Add the named verifier as reviewer when the PR opens. Login table:
+
+  | Person | YouTrack | GitHub |
+  |---|---|---|
+  | <name> | <yt login> | <gh login> |
+
+## YouTrack
+- Start my task → In Progress. All criteria but verification met → PR, tick, comment, To Verify. My cards never go to Done (the verifier closes them).
+- Comments follow `corpus/formats/comment-format.md`: link first, `Location:`, bullets of what's left.
+- Never create or edit cards outside these rules without asking.
+
+## Reviews
+- Check requested reviewer / named verifier first; if it isn't me, ask before reviewing.
+- Run tests locally and on the VM. Formal GitHub review + detailed comment; concise YouTrack comment; tick met criteria on card and PR body.
+- End with the End-of-task report (see docs/reviews.md).
+
+## Teams
+- Never send without approval, except: <pre-approved message types>.
+- Send with `scripts/pw/teams-send.mjs` (group) or `teams-dm.mjs` (1:1). Format in docs/teams.md.
+
+## Documents and decks
+- One master .md per card in `corpus/issues/`, PDF via `scripts/md2pdf.sh`, upload the PDF.
+- Decks: STATE.md per deck, change list in an Artifact, no edits or posts without OK.
+
+## VM
+- `<user>@<vm host>`, needs VPN. Test in a separate worktree; never change the VM's main checkout.
+- Secrets on the VM: `set +x; set -a; source <shared env file>; set +a`. Never print them.
+
+## End-of-task report
+- Reviews: opening line, Test results table (Local / VM), What I asked <author> to fix, Things you should know, Links.
+- Task work: outcome line, What was done, Things you should know, **Still open:** (last; `Still open: nothing` when done).
+- Bullets and tables only.
