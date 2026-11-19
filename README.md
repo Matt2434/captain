@@ -15,7 +15,8 @@ Fork it, fill in `config/captain.env`, run `./install.sh`, and type `/captain` i
 | `skill/captain/SKILL.md` | The `/captain` Claude Code skill. Boilerplate rules first, then a **CUSTOMIZE** section with your own rules |
 | `skill/captain/scripts/` | Layout, status, VPN/VM, PR watcher and workspace sync scripts |
 | `scripts/` | Markdown → PDF/DOCX, markdown viewer, YouTrack poller |
-| `scripts/pw/` | Playwright scripts for Teams (group and 1:1 messages) and SharePoint (upload, download, list) |
+| `scripts/pw/` | Playwright scripts for Teams (group and 1:1 messages) and SharePoint (upload, download, list); `ms-login.mjs` for the one-time Microsoft sign-in |
+| `skill/captain/scripts/bootstrap.sh` | First-run check: missing tools, GitHub and YouTrack access, Microsoft login, VPN. `bootstrap.sh install <tools>` installs the approved ones |
 | `templates/` | `CLAUDE.md` project template, YouTrack comment, task and user-story formats |
 | `docs/` | One page per topic (list below) |
 | `config/captain.env.example` | Every value you need to change, in one file |
@@ -80,8 +81,9 @@ cp templates/CLAUDE.md.template "$PROJECT_DIR/CLAUDE.md"   # then edit it
 ```
 
 1. Open cmux, start a workspace in your project folder, run `claude`.
-2. Type `/captain`. It pins the Captain workspace at the top, puts a ☕ caffeinate workspace at the bottom, logs task workspaces into the VM, and reports your cards, PRs and review requests.
-3. Ask Captain to start a task or review. It opens a new workspace for it and sends the prompt.
+2. Type `/captain`. The first thing it does is run `bootstrap.sh`. If anything is missing, Captain introduces itself, lists the missing tools (with what each is for and the install command), and asks for your YouTrack token (for your cards and task numbers) and your GitHub login (for your open PRs and review requests). It installs only the tools you approve. Logins and tokens you enter yourself with `!` commands, never in chat. This check is modeled on firstmate's `fm-bootstrap.sh` ([kunchenguid/firstmate](https://github.com/kunchenguid/firstmate)).
+3. Once the check passes, it pins the Captain workspace at the top, puts a ☕ caffeinate workspace at the bottom, logs task workspaces into the VM, and reports your cards, PRs and review requests.
+4. Ask Captain to start a task or review. It opens a new workspace for it and sends the prompt.
 
 Secrets (`.env`, tokens, VPN passwords) never go in this repo. `config/captain.env` is git-ignored.
 

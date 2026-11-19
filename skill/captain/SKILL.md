@@ -11,6 +11,36 @@ Scope: the project in `__PROJECT_DIR__`, GitHub account **__GH_USER__**, repo `_
 
 ### Steps (run in order)
 
+0. **Bootstrap check (every start).** Run `bash ~/.claude/skills/captain/bootstrap.sh`. Silent = all good, go to step 1. Otherwise, before anything else, greet the user with this message (fill in only the parts that apply, keep the order), then wait:
+
+   ```
+   Hi, this is Captain ⚓ — I coordinate your capstone: one workspace per task, reviews, YouTrack and GitHub kept in sync.
+   Before I can take the helm I need a few things from you:
+
+   Tools to install (I can install these for you — say "yes", or name the ones you want):
+     • <tool> — <purpose>   (<install command>)
+   Optional (nice to have):
+     • <tool> — <purpose>   (<install command>)
+   Install yourself:
+     • <tool> — <purpose>   (<instructions>)
+
+   Access:
+     • YouTrack — I need your YouTrack token to read your cards and task numbers (01A-…) and exit criteria.
+       Create one at <YouTrack url> → Profile → Account Security → New token, then put
+       YOUTRACK_URL=… and YOUTRACK_TOKEN=… in ~/.config/capstone.env (chmod 600). Don't paste the token in chat.
+     • GitHub — I need your school GitHub account (<login>) logged in to gh to find your open PRs,
+       review requests and CI status. Run: ! gh auth login
+     • Teams/SharePoint — I need a saved Microsoft login to post review messages and upload documents.
+       Run: ! node <project>/scripts/pw/ms-login.mjs and sign in (Duo on your phone).
+     • VPN — the team VM is unreachable; connect the school VPN (Duo push) if you want VM tests.
+
+   Reply "yes" to install everything listed, or tell me which ones.
+   ```
+
+   Line → item: `MISSING`/`OPTIONAL_MISSING` → tools lists; `MISSING_MANUAL` → "Install yourself"; `NEEDS_YOUTRACK_TOKEN`/`YOUTRACK_TOKEN_INVALID` → YouTrack (say the token was rejected if invalid); `NEEDS_GH_AUTH`/`NEEDS_GH_ACCOUNT` → GitHub; `NEEDS_REPO_ACCESS` → ask a repo admin to add the account; `NEEDS_MS_LOGIN` → Teams/SharePoint; `VM_UNREACHABLE` → VPN (information only, not a blocker); `NEEDS_CONFIG` → tell them to fill `config/captain.env` and rerun `install.sh`.
+   - Install only what the user approves (one "yes" may cover the list): `bash ~/.claude/skills/captain/bootstrap.sh install <tools…>`. Never install manual items, and never ask for or handle tokens/passwords yourself — the user types logins with `!` commands.
+   - Rerun the check after each fix. Continue to step 1 once only `OPTIONAL_MISSING` and `VM_UNREACHABLE` lines (or none) remain; without YouTrack or GitHub access, say which parts of the status report will be empty.
+
 1. **Load the role.** Read `__PROJECT_DIR__/CAPTAIN.md` (hand-off state: workspace map, open items) and `__PROJECT_DIR__/CLAUDE.md` (standing rules). Trust live data over CAPTAIN.md when they disagree.
 2. **Layout.** Run `python3 ~/.claude/skills/captain/setup.py`. It is idempotent:
    - pins the `🤠 Captain` workspace and moves it to the **top** of the cmux sidebar;

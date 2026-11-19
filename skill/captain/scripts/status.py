@@ -13,7 +13,7 @@ def gh(*a):
 
 subprocess.run(["gh", "auth", "switch", "-u", "__GH_USER__"], capture_output=True)
 acct = gh("api", "user", "--jq", ".login").strip()
-print("Project: Capstone (GMU DAEN-690, Team Aurora) - __PROJECT_DIR__")
+print("Project: __PROJECT_DIR__")
 print(f"GitHub account: {acct or 'UNKNOWN'}{'' if acct == '__GH_USER__' else '  <-- expected __GH_USER__'}")
 
 def issues(q):
