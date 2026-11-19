@@ -25,38 +25,17 @@ Captain is not an app. It's a Claude Code skill, a set of scripts, and the conve
 ## How it works
 
 ```mermaid
-flowchart LR
-    You(["🧑 You"]) <--> CAP["🤠 Captain<br/>pinned · top of sidebar"]
-
-    subgraph cmux["cmux workspaces"]
-        direction TB
-        CAP
-        W1["🔍 Review 01A-215<br/>Claude ▸ │ VM shell"]
-        W2["🛠️ Code 01A-263<br/>Claude ▸ │ VM shell"]
-        W3["✍️ Deck / doc<br/>Claude ▸ │ viewer"]
-        CAF["☕ caffeinate<br/>bottom of sidebar"]
-    end
-
-    CAP -- "prompt (cmux send)" --> W1 & W2 & W3
-    W1 & W2 & W3 -- "end-of-task report" --> CAP
-
-    subgraph svc["Team services"]
-        GH[("GitHub<br/>PRs · reviews")]
-        YT[("YouTrack<br/>cards · exit criteria")]
-        TM[("Teams<br/>group + 1:1")]
-        SP[("SharePoint<br/>docs · decks")]
-    end
-
-    VM[["School VM<br/>CI + tests"]]
-    VPN{{"VPN + Duo 📱"}}
-
-    W1 & W2 --> GH & YT
-    W1 --> TM
-    W3 --> SP
-    W1 & W2 -. ssh .-> VPN -.-> VM
-    WATCH(["watch_prs.py<br/>ws_sync.py"]) -- "review requested → new workspace" --> CAP
-    GH -.-> WATCH
+flowchart TD
+    A["🧑 You"] --> B["🤠 Captain"]
+    B --> C["🔍 Review"]
+    B --> D["🛠️ Code"]
+    B --> E["✍️ Docs and decks"]
+    C --> F["GitHub · YouTrack · Teams"]
+    D --> F
+    E --> G["SharePoint"]
 ```
+
+You talk to Captain. Captain opens one workspace per task. Each workspace posts its own results.
 
 ## Features
 
