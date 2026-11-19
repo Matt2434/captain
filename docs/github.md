@@ -16,4 +16,4 @@
 
 ## CI
 
-Team org had Actions disabled, so CI runs on a school VM as a systemd timer that polls PRs and posts a `team/local-ci` status. How ours works: [CI on a school VM](ci.md).
+Team org had Actions disabled, so CI runs on a school VM as a systemd timer that polls PRs and posts a `team/local-ci` status.

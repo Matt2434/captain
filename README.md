@@ -72,8 +72,7 @@ Docs:
 7. [Teams messages](docs/teams.md): group chat and personal 1:1 formats
 8. [Documents, decks and SharePoint](docs/documents-decks-sharepoint.md)
 9. [VPN, Duo and phone setup](docs/vpn-phone.md): iPhone and Android
-10. [CI on a school VM](docs/ci.md): how our self-hosted CI tested every PR
-11. [Known pains](docs/pains.md)
+10. [Known pains](docs/pains.md)
 
 ---
 
